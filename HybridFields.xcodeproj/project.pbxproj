@@ -1,0 +1,305 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A6FE2D841E4F93500035ED8A /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = A6FE2D831E4F93500035ED8A /* main.c */; };
+		A6FE2D941E4F93A40035ED8A /* Calculations.c in Sources */ = {isa = PBXBuildFile; fileRef = A6FE2D8A1E4F93A40035ED8A /* Calculations.c */; };
+		A6FE2D951E4F93A40035ED8A /* Fields.c in Sources */ = {isa = PBXBuildFile; fileRef = A6FE2D8C1E4F93A40035ED8A /* Fields.c */; };
+		A6FE2D961E4F93A40035ED8A /* Grid.c in Sources */ = {isa = PBXBuildFile; fileRef = A6FE2D8E1E4F93A40035ED8A /* Grid.c */; };
+		A6FE2D971E4F93A40035ED8A /* Particle.c in Sources */ = {isa = PBXBuildFile; fileRef = A6FE2D901E4F93A40035ED8A /* Particle.c */; };
+		A6FE2D981E4F93A40035ED8A /* Simulation.c in Sources */ = {isa = PBXBuildFile; fileRef = A6FE2D921E4F93A40035ED8A /* Simulation.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A6FE2D7E1E4F93500035ED8A /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		A6FE2D801E4F93500035ED8A /* HybridFields */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HybridFields; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6FE2D831E4F93500035ED8A /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		A6FE2D8A1E4F93A40035ED8A /* Calculations.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Calculations.c; sourceTree = "<group>"; };
+		A6FE2D8B1E4F93A40035ED8A /* Calculations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Calculations.h; sourceTree = "<group>"; };
+		A6FE2D8C1E4F93A40035ED8A /* Fields.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Fields.c; sourceTree = "<group>"; };
+		A6FE2D8D1E4F93A40035ED8A /* Fields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fields.h; sourceTree = "<group>"; };
+		A6FE2D8E1E4F93A40035ED8A /* Grid.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Grid.c; sourceTree = "<group>"; };
+		A6FE2D8F1E4F93A40035ED8A /* Grid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Grid.h; sourceTree = "<group>"; };
+		A6FE2D901E4F93A40035ED8A /* Particle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Particle.c; sourceTree = "<group>"; };
+		A6FE2D911E4F93A40035ED8A /* Particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Particle.h; sourceTree = "<group>"; };
+		A6FE2D921E4F93A40035ED8A /* Simulation.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Simulation.c; sourceTree = "<group>"; };
+		A6FE2D931E4F93A40035ED8A /* Simulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Simulation.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A6FE2D7D1E4F93500035ED8A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A6FE2D771E4F93500035ED8A = {
+			isa = PBXGroup;
+			children = (
+				A6FE2D821E4F93500035ED8A /* HybridFields */,
+				A6FE2D9A1E4F94810035ED8A /* Structs */,
+				A6FE2D991E4F946D0035ED8A /* Header */,
+				A6FE2D811E4F93500035ED8A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A6FE2D811E4F93500035ED8A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A6FE2D801E4F93500035ED8A /* HybridFields */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A6FE2D821E4F93500035ED8A /* HybridFields */ = {
+			isa = PBXGroup;
+			children = (
+				A6FE2D831E4F93500035ED8A /* main.c */,
+				A6FE2D921E4F93A40035ED8A /* Simulation.c */,
+				A6FE2D8A1E4F93A40035ED8A /* Calculations.c */,
+			);
+			path = HybridFields;
+			sourceTree = "<group>";
+		};
+		A6FE2D991E4F946D0035ED8A /* Header */ = {
+			isa = PBXGroup;
+			children = (
+				A6FE2D8B1E4F93A40035ED8A /* Calculations.h */,
+				A6FE2D8D1E4F93A40035ED8A /* Fields.h */,
+				A6FE2D8F1E4F93A40035ED8A /* Grid.h */,
+				A6FE2D911E4F93A40035ED8A /* Particle.h */,
+				A6FE2D931E4F93A40035ED8A /* Simulation.h */,
+			);
+			name = Header;
+			path = HybridFields;
+			sourceTree = "<group>";
+		};
+		A6FE2D9A1E4F94810035ED8A /* Structs */ = {
+			isa = PBXGroup;
+			children = (
+				A6FE2D8C1E4F93A40035ED8A /* Fields.c */,
+				A6FE2D8E1E4F93A40035ED8A /* Grid.c */,
+				A6FE2D901E4F93A40035ED8A /* Particle.c */,
+			);
+			name = Structs;
+			path = HybridFields;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A6FE2D7F1E4F93500035ED8A /* HybridFields */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A6FE2D871E4F93500035ED8A /* Build configuration list for PBXNativeTarget "HybridFields" */;
+			buildPhases = (
+				A6FE2D7C1E4F93500035ED8A /* Sources */,
+				A6FE2D7D1E4F93500035ED8A /* Frameworks */,
+				A6FE2D7E1E4F93500035ED8A /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HybridFields;
+			productName = HybridFields;
+			productReference = A6FE2D801E4F93500035ED8A /* HybridFields */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A6FE2D781E4F93500035ED8A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = "Julian Manke";
+				TargetAttributes = {
+					A6FE2D7F1E4F93500035ED8A = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = 45VTMQ88RW;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = A6FE2D7B1E4F93500035ED8A /* Build configuration list for PBXProject "HybridFields" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = A6FE2D771E4F93500035ED8A;
+			productRefGroup = A6FE2D811E4F93500035ED8A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A6FE2D7F1E4F93500035ED8A /* HybridFields */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A6FE2D7C1E4F93500035ED8A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A6FE2D951E4F93A40035ED8A /* Fields.c in Sources */,
+				A6FE2D961E4F93A40035ED8A /* Grid.c in Sources */,
+				A6FE2D981E4F93A40035ED8A /* Simulation.c in Sources */,
+				A6FE2D841E4F93500035ED8A /* main.c in Sources */,
+				A6FE2D971E4F93A40035ED8A /* Particle.c in Sources */,
+				A6FE2D941E4F93A40035ED8A /* Calculations.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A6FE2D851E4F93500035ED8A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		A6FE2D861E4F93500035ED8A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		A6FE2D881E4F93500035ED8A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = 45VTMQ88RW;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		A6FE2D891E4F93500035ED8A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = 45VTMQ88RW;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A6FE2D7B1E4F93500035ED8A /* Build configuration list for PBXProject "HybridFields" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A6FE2D851E4F93500035ED8A /* Debug */,
+				A6FE2D861E4F93500035ED8A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A6FE2D871E4F93500035ED8A /* Build configuration list for PBXNativeTarget "HybridFields" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A6FE2D881E4F93500035ED8A /* Debug */,
+				A6FE2D891E4F93500035ED8A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A6FE2D781E4F93500035ED8A /* Project object */;
+}
