@@ -227,10 +227,10 @@ void hybridFieldsWithAnalyticPrecalculation() {
     //Simulation Time of actual simulation
     double tN = 15.0;
     // time of precalculation (if used)
-    double precalculationTime = 7.0; // precalc of 7 works pretty well for circcles (B_z = 1)
+    double precalculationTime = 0.0; // precalc of 7 works pretty well for circcles (B_z = 1)
     
     //number of particles for simulation
-    int numberOfParticles = 2;
+    int numberOfParticles = 1;
     
     char filename[32] = "";
     
@@ -239,7 +239,7 @@ void hybridFieldsWithAnalyticPrecalculation() {
     particle particles[numberOfParticles];
     
     // dx, numberOfBoxes, numberOfGridPointsPerBox
-    initGrid(&Grid, 0.1, 0.1, 0.1, 16, 16, 16, 16, 16, 16);
+    initGrid(&Grid, 0.2, 0.2, 0.2, 8, 8, 8, 16, 16, 16);
     initFields(&Fields,&Grid);
     
     double dt = 0.5 * Grid.dx;
@@ -259,10 +259,10 @@ void hybridFieldsWithAnalyticPrecalculation() {
     }
     
     // initial conditions for all particles
-    initializeParticle(&particles[1], 0, 17.0, 12.0, 14.8, -0.458, 0, 0);
-    initializeParticle(&particles[0], 0, 7.0, 11.0, 14.8, 0.458, 0, 0);
+    //initializeParticle(&particles[1], 0, 17.0, 12.0, 14.8, -0.458, 0, 0);
+    //initializeParticle(&particles[0], 0, 7.0, 11.0, 14.8, 0.458, 0, 0);
     // circle testing
-    // initializeParticle(&particles[0], 0, 10.5, 15.8, 14.8, 0.7, 0, 0);
+    initializeParticle(&particles[0], 0, 10.5, 15.8, 14.8, 0.7, 0, 0);
     //initializeParticle(&particles[0], 0, 11.8, 11.8, 14.8, 2.5, 0, 0);
     
     // Simulation info for python script
@@ -275,16 +275,16 @@ void hybridFieldsWithAnalyticPrecalculation() {
     FILE *rect = fopen("rectangleInfo.txt", "w");
     
     // actual (absolute) simulation time used for different methods
-    double time = 0;
+    //double time = 0;
     
     // actual simulation time index
-    int p=0;
+    //int p=0;
     
     // define external fields
     double Bext[3] = {0};
     double Eext[3] = {0};
     
-    Bext[2] = 0;
+    Bext[2] = 1;
     
     // =======================================
     // ANALYTIC FIELD-PRECALCULATION
@@ -293,19 +293,21 @@ void hybridFieldsWithAnalyticPrecalculation() {
     if(precalculationTime > 0) {
         reallocateMemoryForParticleHistories(particles, numberOfParticles, dt, tN, precalculationTime);
         nystromBackwards(particles, &Grid, &Fields, numberOfParticles, dt, precalculationTime, Bext, Eext);
-        resetInitialConditions(particles, numberOfParticles, &time, Bext);
-        precalculateFieldsForGivenPrecalculationTime(particles, &Grid, &Fields, numberOfParticles, numberOfPrecalculationSteps, rect, dt, tN, &p, &time, precalculationTime, Bext, Eext);
+        resetInitialConditions(particles, numberOfParticles, Bext);
+        precalculateFieldsForGivenPrecalculationTime(particles, &Grid, &Fields, numberOfParticles, numberOfPrecalculationSteps, rect, dt, tN, precalculationTime, Bext, Eext);
     }
     //==============================================================================================================
     // MAIN ROUTINE
     //==============================================================================================================
-    for(; p < numberOfIterations + numberOfPrecalculationSteps; p++) {
+    for(int step = precalculationTime / dt; step < tN / dt; step++) {
         
-        printf("Calculation of time step %i of %i...\n", p-numberOfPrecalculationSteps, numberOfIterations);
-        writeHistoryOfParticlesToFile(particles, filename, p, numberOfParticles);
+        //printf("Calculation of time step %i of %i...\n", p-numberOfPrecalculationSteps, numberOfIterations);
+        int numberOfSteps = tN / dt;
+        printf("calculating next time step %i of %i...\n", step, numberOfSteps);
+        writeHistoryOfParticlesToFile(particles, filename, step, numberOfParticles);
         
-        pushEField(&Grid, &Fields, particles, numberOfParticles, time, dt);
-        pushHField(&Grid, &Fields, particles, numberOfParticles, time + dt / 2.0, dt);
+        pushEField(&Grid, &Fields, particles, numberOfParticles, precalculationTime, dt);
+        pushHField(&Grid, &Fields, particles, numberOfParticles, precalculationTime + dt / 2.0, dt);
         
         for(int h=0; h < numberOfParticles; h++) {
             particles[h].oldBoxIndexBeforePush = calcCurrentBoxIndexOfParticle(&particles[h], &Grid);
@@ -319,7 +321,7 @@ void hybridFieldsWithAnalyticPrecalculation() {
             fprintf(rect, "%f %f\n", cornerX, cornerY);
             // =================================================================
             double tau = dt / particles[h].uRel[0];;
-            Nystrom(particles, &Fields, &Grid, p, tau, numberOfParticles, h, dt, tN, Bext, Eext,true);
+            Nystrom(particles, &Fields, &Grid, step, tau, numberOfParticles, h, dt, tN, Bext, Eext,true);
             
             //updateVelocityWithBorisPusher(particles, &Grid, &Fields, numberOfParticles, h, Eext, Bext, dt, p);
             //updateLocation(particles, &Grid, dt, h, p);
@@ -329,21 +331,21 @@ void hybridFieldsWithAnalyticPrecalculation() {
             
             if(particles[h].oldBoxIndexBeforePush != particles[h].newBoxIndexAfterPush) {
                 particles[h].didParticleChangeBoxAfterPush = true;
-                updateNearField(&Grid, &Fields, &particles[h], time);
+                updateNearField(&Grid, &Fields, &particles[h], precalculationTime);
             } else {
                 particles[h].didParticleChangeBoxAfterPush = false;
             }
         }
         
-        pushHField(&Grid, &Fields, particles, numberOfParticles, time + dt / 2.0, dt);
-        pushEField(&Grid, &Fields, particles, numberOfParticles, time, dt);
+        pushHField(&Grid, &Fields, particles, numberOfParticles, precalculationTime + dt / 2.0, dt);
+        pushEField(&Grid, &Fields, particles, numberOfParticles, precalculationTime, dt);
         
-        writeElectricFieldToFile(&Grid, &particles[0], &Fields, p);
+        writeElectricFieldToFile(&Grid, &particles[0], &Fields, step);
         
         int planeForPlotting = particles[0].xRel[3] / Grid.dz;
-        writeFieldComponentsForFourierAnalysisToFile(&Grid, &Fields, filename, p, planeForPlotting, true, false);
+        writeFieldComponentsForFourierAnalysisToFile(&Grid, &Fields, filename, step, planeForPlotting, true, false);
         
-        time += dt;
+        precalculationTime += dt;
     }
     fclose(rect);
     system("cd ~/Documents/Masterarbeit/Numerics/HybridFields;. BashScript_MakeImagesAndMovie.sh");
@@ -431,13 +433,30 @@ void hybridFieldsWithAnalyticPrecalculation() {
         freeMemoryforArray(particles[i].time);
     }
     
-    for(int j = 0;j < numberOfParticles; j++) {
-        for(int i = 0; i< (precalculationTime / dt) + (tN / dt); i++) {
-            free(particles[j].xRelHistory[i]);
-            free(particles[j].uRelHistory[i]);
+//    for(int j = 0;j < numberOfParticles; j++) {
+//        for(int i = 0; i< (precalculationTime / dt) + (tN / dt); i++) {
+//            free(particles[j].xRelHistory[i]);
+//            free(particles[j].uRelHistory[i]);
+//        }
+//        free(particles[j].xRelHistory);
+//        free(particles[j].uRelHistory);
+//    }
+    
+    
+    for (int p = 0; p < numberOfParticles; p++){
+        printf("releasing allocated memory in Particle%d...\n", p);
+        int arrayLength = particles[p].iterationCount;
+        for (int i = 0; i < arrayLength; i++){
+            free(particles[p].xRelHistory[i]);
+            particles[p].xRelHistory[i] = NULL;
+            free(particles[p].uRelHistory[i]);
+            particles[p].uRelHistory[i] = NULL;
         }
-        free(particles[j].xRelHistory);
-        free(particles[j].uRelHistory);
+        free(particles[p].xRelHistory);
+        particles[p].xRelHistory = NULL;
+        
+        free(particles[p].uRelHistory);
+        particles[p].uRelHistory = NULL;
     }
     //==============================================================================================================
 }

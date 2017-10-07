@@ -49,7 +49,7 @@ void writeHistoryOfParticlesToFile(particle *particles, char *filename, int actu
 
 void setInitialConditionsToStartAtT(particle *particles, int numberOfParticles);
 
-void resetInitialConditions(particle *particles, int numberOfParticles, double *time, double *Bext);
+void resetInitialConditions(particle *particles, int numberOfParticles, double *Bext);
 
 void scaleVectorByConstantFactor(double vector[3], double constFactor);
 
@@ -61,7 +61,7 @@ void setInitialConditionsToStartAtT(particle *particles, int numberOfParticles);
 
 void reallocateMemoryForParticleHistories(particle *particles, int numberOfParticles, double dt, double simulationTime, double precalculationTime);
 
-void precalculateFieldsForGivenPrecalculationTime(particle *particles, Grid *Grid, Fields *Fields, int numberOfParticles, int numberOfPrecalculationSteps, FILE *rect, double dt, double tN, int *timeIterationStep, double *time, double precalculationTime, double Bext[3], double Eext[3]);
+void precalculateFieldsForGivenPrecalculationTime(particle *particles, Grid *Grid, Fields *Fields, int numberOfParticles, int numberOfPrecalculationSteps, FILE *rect, double dt, double tN, double precalculationTime, double Bext[3], double Eext[3]);
 
 //void updateLocation(particle *Particle, Grid *Grid, double dt, int actualTimeIndex);
 

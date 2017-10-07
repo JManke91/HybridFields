@@ -491,17 +491,17 @@ void crossProduct(double a[3], double b[3], double result[3]){
 }
 
 ///@brief In the context of analytical precalulation of fields, after reversed particle push, the particle push in "desired" direction starts. But originally not at desired initial conditions, but at positions obtained from reversed particle push. Fronm here, particle gets pushed via Nystrom up to the desired predefined initial conditions. The particle history up to those predefined initial positions is taken to calculate LW fields analytically on the whole grid (only in the very last time step, because right after that, the hybrid field calculation with Maxwell Pushers set in!).
-void precalculateFieldsForGivenPrecalculationTime(particle *particles, Grid *Grid, Fields *Fields, int numberOfParticles, int numberOfPrecalculationSteps, FILE *rect, double dt, double tN, int *timeIterationStep, double *time, double precalculationTime, double Bext[3], double Eext[3]) {
+void precalculateFieldsForGivenPrecalculationTime(particle *particles, Grid *Grid, Fields *Fields, int numberOfParticles, int numberOfPrecalculationSteps, FILE *rect, double dt, double tN, double precalculationTime, double Bext[3], double Eext[3]) {
     
     // predefine stuff
     int numberOfBoxesInX = Grid->numberOfBoxesInX;
     int numberOfBoxesInY = Grid->numberOfBoxesInY;
     int numberOfBoxesInZ = Grid->numberOfBoxesInZ;
 
-    for(int p = *timeIterationStep; p < numberOfPrecalculationSteps; p++) {
-        *timeIterationStep += 1;
+    for(int step = 0; step < numberOfPrecalculationSteps; step++) {
+        //*timeIterationStep += 1;
         
-        printf("Precalculation of time step %i of %i\n", p, numberOfPrecalculationSteps);
+        printf("Precalculation of time step %i of %i\n", step, numberOfPrecalculationSteps);
         
         for(int h=0; h < numberOfParticles; h++) {
             
@@ -515,37 +515,38 @@ void precalculateFieldsForGivenPrecalculationTime(particle *particles, Grid *Gri
             // =================================================================
             
             double tau = dt/particles[h].uRel[0];
-            Nystrom(particles, Fields, Grid, p, tau, numberOfParticles, h, dt, tN, Bext, Eext, true);
+            Nystrom(particles, Fields, Grid, step, tau, numberOfParticles, h, dt, tN, Bext, Eext, true);
             
             // just at the very last time step, calculate fields for whole particle trajectory
-            if(double_equals(*time, (precalculationTime - dt))) {
+            if(double_equals(step * dt, (precalculationTime - dt))) {
                 // code
                 for(int boxIndex = 0; boxIndex < numberOfBoxesInX * numberOfBoxesInY * numberOfBoxesInZ; boxIndex++) {
                     if(!boxIsInNearFieldOfParticle(Grid, &particles[h], boxIndex)) {
-                        addLWFieldsInBoxforTest(Grid, Fields, &particles[h], boxIndex, *time);
-                        writeElectricFieldToFile(Grid, &particles[0], Fields, p);
+                        double evaluationTime = step * dt;
+                        addLWFieldsInBoxforTest(Grid, Fields, &particles[h], boxIndex, evaluationTime);
+                        writeElectricFieldToFile(Grid, &particles[0], Fields, step);
                     }
                 }
             }
         }
-        *time += dt;
+       // *time += dt;
     }
 }
 
 ///@brief In the context of analytial precalculation of fields, a reversed particle pusher is used in order to obtain particle positions x_i, at which particles have to start, in order to be at desired initial conditions after 'precalculationTime'. Given the fact, that particles start moving in 'normal' direction at x_i, variables like iteration count have to be set to 0 again and velocities need to be reversed again.
-///@param time actual (absolute) simulation time. Actual simulation starts after reversed particle pusher, therefore 'time' needs to be reset to zero at this point.
-void resetInitialConditions(particle *particles, int numberOfParticles, double *time, double *Bext) {
+void resetInitialConditions(particle *particles, int numberOfParticles, double *Bext) {
+    scaleVectorByConstantFactor(Bext, -1.0);
+    
     for(int p = 0; p < numberOfParticles; p++) {
         for(int i = 0; i < 3; i++) {
             particles[p].uRel[i + 1] *= -1;
-            particles[p].uRelHistory[0][i+1] *= -1;
+            //particles[p].uRelHistory[0][i+1] *= -1;
         }
         particles[p].historyLength = 0;
         particles[p].iterationCount = 0;
         particles[p].xRel[0] = 0;
     }
-    *time = 0;
-    scaleVectorByConstantFactor(Bext, -1.0);
+    //*time = 0;
 }
 
 void writeHistoryOfParticlesToFile(particle *particles, char *filename, int actualTimeIndex, int numberOfParticles) {
@@ -1000,7 +1001,7 @@ void nystromBackwards(particle *particles, Grid *Grid, Fields *Fields, int numbe
     for(int p = 0; p < numberOfParticles; p++) {
         for(int i = 0; i < 3; i++) {
             particles[p].uRel[i+1] *= -1;
-            particles[p].uRelHistory[0][i+1] *= -1;
+            //particles[p].uRelHistory[0][i+1] *= -1;
         }
     }
     
