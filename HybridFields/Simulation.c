@@ -227,10 +227,10 @@ void hybridFieldsWithAnalyticPrecalculation() {
     //Simulation Time of actual simulation
     double tN = 15.0;
     // time of precalculation (if used)
-    double precalculationTime = 0.0; // precalc of 7 works pretty well for circcles (B_z = 1)
+    double precalculationTime = 7.0; // precalc of 7 works pretty well for circcles (B_z = 1)
     
     //number of particles for simulation
-    int numberOfParticles = 1;
+    int numberOfParticles = 2;
     
     char filename[32] = "";
     
@@ -239,7 +239,7 @@ void hybridFieldsWithAnalyticPrecalculation() {
     particle particles[numberOfParticles];
     
     // dx, numberOfBoxes, numberOfGridPointsPerBox
-    initGrid(&Grid, 0.2, 0.2, 0.2, 8, 8, 8, 16, 16, 16);
+    initGrid(&Grid, 0.1, 0.1, 0.1, 16, 16, 16, 16, 16, 16);
     initFields(&Fields,&Grid);
     
     double dt = 0.5 * Grid.dx;
@@ -259,8 +259,10 @@ void hybridFieldsWithAnalyticPrecalculation() {
     }
     
     // initial conditions for all particles
-//    initializeParticle(&particles[1], 0, 17.0, 12.0, 14.8, -0.945, 0, 0);
-    initializeParticle(&particles[0], 0, 10.5, 15.8, 14.8, 0.7, 0, 0);
+    initializeParticle(&particles[1], 0, 17.0, 12.0, 14.8, -0.458, 0, 0);
+    initializeParticle(&particles[0], 0, 7.0, 11.0, 14.8, 0.458, 0, 0);
+    // circle testing
+    // initializeParticle(&particles[0], 0, 10.5, 15.8, 14.8, 0.7, 0, 0);
     //initializeParticle(&particles[0], 0, 11.8, 11.8, 14.8, 2.5, 0, 0);
     
     // Simulation info for python script
@@ -282,7 +284,7 @@ void hybridFieldsWithAnalyticPrecalculation() {
     double Bext[3] = {0};
     double Eext[3] = {0};
     
-    Bext[2] = 1;
+    Bext[2] = 0;
     
     // =======================================
     // ANALYTIC FIELD-PRECALCULATION
@@ -316,12 +318,11 @@ void hybridFieldsWithAnalyticPrecalculation() {
             double cornerY = numberBoxesY * (Grid.numberOfGridPointsPerBoxInY * Grid.dy);
             fprintf(rect, "%f %f\n", cornerX, cornerY);
             // =================================================================
-//            double tau = dt / particles[h].uRel[0];
-//            Nystrom(particles, &Fields, &Grid, p, tau, numberOfParticles, h, dt, tN, Bext, Eext,true);
+            double tau = dt / particles[h].uRel[0];;
+            Nystrom(particles, &Fields, &Grid, p, tau, numberOfParticles, h, dt, tN, Bext, Eext,true);
             
-//             FOR TESTING: USE BPORIS PUSHER
-            updateVelocityWithBorisPusher(particles, &Grid, &Fields, numberOfParticles, h, Eext, Bext, dt, p);
-            updateLocation(particles, &Grid, dt, h, p);
+            //updateVelocityWithBorisPusher(particles, &Grid, &Fields, numberOfParticles, h, Eext, Bext, dt, p);
+            //updateLocation(particles, &Grid, dt, h, p);
             
             particles[h].newBoxIndexAfterPush = calcCurrentBoxIndexOfParticle(&particles[h], &Grid);
             calcBoxIndizesOfNextNeighbourBoxes(&Grid, &particles[h], particles[h].boxIndicesOfNearFieldBoxesAfterPush);
@@ -343,11 +344,6 @@ void hybridFieldsWithAnalyticPrecalculation() {
         writeFieldComponentsForFourierAnalysisToFile(&Grid, &Fields, filename, p, planeForPlotting, true, false);
         
         time += dt;
-//        printf("p = %d\n", p);
-//        printf("time = %f\n", time);
-//        printf("xrel[0] = %f\n", particles[0].xRel[0]);
-//        printf("xRelHistory[%d] = %f\n", p, particles[0].xRelHistory[p][0]);
-//        printf("test\n");
     }
     fclose(rect);
     system("cd ~/Documents/Masterarbeit/Numerics/HybridFields;. BashScript_MakeImagesAndMovie.sh");

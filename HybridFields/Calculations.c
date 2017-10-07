@@ -275,6 +275,7 @@ void writeElectricFieldToFile(Grid *Grid, particle *particle, Fields *Fields, in
     //int nx = Grid->Nx;
     int ny = Grid->Ny;
     int nz = Grid->Nz;
+    
     //Convert input String "index" to character
     sprintf(character,"%d",index);
     //Combine "filename" and "index"
@@ -282,7 +283,7 @@ void writeElectricFieldToFile(Grid *Grid, particle *particle, Fields *Fields, in
     //Combine new filename and ".txt"
     strcat(filename,".txt"); // Now "filename" = "electricFieldAtTimei.txt", where i is actual time index
     int zLW = (particle->xRel[3])/(Grid->dz);
-     int zComponentPuse = 64; // for pulse propagation (Maxwell-Pusher method)
+     //int zComponentPuse = 64; // for pulse propagation (Maxwell-Pusher method)
     
     FILE *file=fopen(filename,"w");
     
