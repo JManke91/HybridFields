@@ -20,7 +20,8 @@ void initParticle(particle *particle, double mass, int numberOfIterationSteps) {
     allocateMemory(particle,numberOfIterationSteps); //Allocate Memory for x,y,z Position Array of Particle
     //initValuesForArrays(particle, numberOfIterationSteps);
     particle->mass=mass;
-    particle->iterationCount=0;
+    particle->iterationCount = 0;
+    particle->historyLength = 0;
     particle->charge=1;
     particle->didParticleChangeBoxAfterPush = false;
     for(int i = 0; i<27; i++) {

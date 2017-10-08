@@ -258,6 +258,7 @@ void initializeParticle(particle *particle, double t0, double x0, double y0, dou
     particle->uRelHistory[0][3] = zDot0;
     
     particle->iterationCount = 0;
+    particle->historyLength = 0;
 }
 
 bool double_equals(double a, double b) {
@@ -498,7 +499,7 @@ void precalculateFieldsForGivenPrecalculationTime(particle *particles, Grid *Gri
 //    int numberOfBoxesInY = Grid->numberOfBoxesInY;
 //    int numberOfBoxesInZ = Grid->numberOfBoxesInZ;
 
-    for(int step = 0; step < numberOfPrecalculationSteps; step++) {
+    for(int step = 0; step < precalculationTime / dt; step++) {
         //*timeIterationStep += 1;
         
         printf("Precalculation of time step %i of %i\n", step, numberOfPrecalculationSteps);
@@ -513,6 +514,7 @@ void precalculateFieldsForGivenPrecalculationTime(particle *particles, Grid *Gri
             double cornerY = numberBoxesY * (Grid->numberOfGridPointsPerBoxInY * Grid->dy);
             fprintf(rect, "%f %f\n", cornerX, cornerY);
             // =================================================================
+            addCurrentStateToParticleHistory(&particles[h], step);
             
             double tau = dt/particles[h].uRel[0];
             Nystrom(particles, Fields, Grid, step, tau, numberOfParticles, h, dt, tN, Bext, Eext, true);
@@ -722,17 +724,27 @@ void Nystrom(particle *particle, Fields *Fields, Grid *Grid, int p, double dt, i
         particle[actualParticle].xRel[i] = particle[actualParticle].xRel[i] + dt * particle[actualParticle].uRel[i] + (dt * dt / 6) * (a[i] + b[i] + c[i]);
         particle[actualParticle].uRel[i] = particle[actualParticle].uRel[i] + (dt / 6) * (a[i] + 2 * b[i] + 2 * c[i] + d[i]);
     }
-    particle[actualParticle].xRelHistory[p+1][0] = particle[actualParticle].xRel[0];
-    particle[actualParticle].xRelHistory[p+1][1] = particle[actualParticle].xRel[1];
-    particle[actualParticle].xRelHistory[p+1][2] = particle[actualParticle].xRel[2];
-    particle[actualParticle].xRelHistory[p+1][3] = particle[actualParticle].xRel[3];
+//    particle[actualParticle].xRelHistory[p+1][0] = particle[actualParticle].xRel[0];
+//    particle[actualParticle].xRelHistory[p+1][1] = particle[actualParticle].xRel[1];
+//    particle[actualParticle].xRelHistory[p+1][2] = particle[actualParticle].xRel[2];
+//    particle[actualParticle].xRelHistory[p+1][3] = particle[actualParticle].xRel[3];
+//
+//    particle[actualParticle].uRelHistory[p+1][0] = particle[actualParticle].uRel[0];
+//    particle[actualParticle].uRelHistory[p+1][1] = particle[actualParticle].uRel[1];
+//    particle[actualParticle].uRelHistory[p+1][2] = particle[actualParticle].uRel[2];
+//    particle[actualParticle].uRelHistory[p+1][3] = particle[actualParticle].uRel[3];
+//
+//    particle[actualParticle].iterationCount += 1;
+}
+
+void addCurrentStateToParticleHistory(particle *particle,  int index) {
     
-    particle[actualParticle].uRelHistory[p+1][0] = particle[actualParticle].uRel[0];
-    particle[actualParticle].uRelHistory[p+1][1] = particle[actualParticle].uRel[1];
-    particle[actualParticle].uRelHistory[p+1][2] = particle[actualParticle].uRel[2];
-    particle[actualParticle].uRelHistory[p+1][3] = particle[actualParticle].uRel[3];
-    
-    particle[actualParticle].iterationCount += 1;
+    for (int i = 0; i < 4; i++){
+        particle->xRelHistory[particle->historyLength][i] = particle->xRel[i];
+        particle->uRelHistory[particle->historyLength][i] = particle->uRel[i];
+    }
+    particle->historyLength += 1;
+    particle->iterationCount += 1;
 }
 
 /// Boris pusher velocity update
@@ -897,6 +909,7 @@ void updateLocation(particle *particle, Grid *Grid, double dt, int currentPartic
     particle[currentParticle].xRelHistory[currentTimeStep+1][3] = particle[currentParticle].xRel[3];
     
     particle[currentParticle].iterationCount += 1;
+    particle[currentParticle].historyLength += 1;
 }
 
 
@@ -1026,6 +1039,8 @@ void nystromBackwards(particle *particles, Grid *Grid, Fields *Fields, int numbe
     
     for(int preStep = 0; preStep < (precalculationTime / dt); preStep++) {
         for(int p = 0; p < numberOfParticles; p++) {
+            addCurrentStateToParticleHistory(&particles[p], preStep);
+            
             double tau = dt / particles[p].uRel[0];
             Nystrom(particles, Fields, Grid, preStep, tau, numberOfParticles, p, dt, 20, externBField, externEField, false);
         }

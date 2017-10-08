@@ -29,6 +29,8 @@ int BoxIsInNearFieldOfParticle(Grid *g, const int boxIndex, const int particleIn
 
 void calcFieldsOnGridWithoutNearField(particle *particles, Grid *Grid, Fields *Fields, int numberOfParticles, double t);
 
+void addCurrentStateToParticleHistory(particle *particle,  int index);
+
 double E_x(const double x[4]);
 
 double E_y(const double x[4]);

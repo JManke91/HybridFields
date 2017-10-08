@@ -225,9 +225,9 @@ void hybridFieldsWithAnalyticPrecalculation() {
     // =======================================
     
     //Simulation Time of actual simulation
-    double tN = 15.0;
+    double tN = 8.0;
     // time of precalculation (if used)
-    double precalculationTime = 7.0; // precalc of 7 works pretty well for circcles (B_z = 1)
+    double precalculationTime = 4.0; // precalc of 7 works pretty well for circcles (B_z = 1)
     
     //number of particles for simulation
     int numberOfParticles = 1;
@@ -262,7 +262,7 @@ void hybridFieldsWithAnalyticPrecalculation() {
     //initializeParticle(&particles[1], 0, 17.0, 12.0, 14.8, -0.458, 0, 0);
     //initializeParticle(&particles[0], 0, 7.0, 11.0, 14.8, 0.458, 0, 0);
     // circle testing
-    initializeParticle(&particles[0], 0, 10.5, 15.8, 14.8, 0.7, 0, 0);
+    initializeParticle(&particles[0], 0, 10.5, 15.8, 14.8, 1.3, 0, 0);
     //initializeParticle(&particles[0], 0, 11.8, 11.8, 14.8, 2.5, 0, 0);
     
     // Simulation info for python script
@@ -306,6 +306,9 @@ void hybridFieldsWithAnalyticPrecalculation() {
     //==============================================================================================================
     for(int step = precalculationTime / dt; step < tN / dt; step++) {
         
+        // ATTENTION: DELETE THIS AFTER TESTING
+        double tau = dt / particles[0].uRel[0];
+        
         //printf("Calculation of time step %i of %i...\n", p-numberOfPrecalculationSteps, numberOfIterations);
         int numberOfSteps = tN / dt;
         printf("calculating next time step %i of %i...\n", step, numberOfSteps);
@@ -325,7 +328,13 @@ void hybridFieldsWithAnalyticPrecalculation() {
             double cornerY = numberBoxesY * (Grid.numberOfGridPointsPerBoxInY * Grid.dy);
             fprintf(rect, "%f %f\n", cornerX, cornerY);
             // =================================================================
-            double tau = dt / particles[h].uRel[0];;
+            addCurrentStateToParticleHistory(&particles[h], step);
+            
+//            printf("History time index of particle %i = %f\n", h, particles[0].xRelHistory[step][0]);
+//            printf("time index of particle %i = %f\n", h, particles[0].xRel[0]);
+//            printf("time index = %f\n", precalculationTime);
+            
+            double tau = dt / particles[h].uRel[0];
             Nystrom(particles, &Fields, &Grid, step, tau, numberOfParticles, h, dt, tN, Bext, Eext,true);
             
             //updateVelocityWithBorisPusher(particles, &Grid, &Fields, numberOfParticles, h, Eext, Bext, dt, p);
