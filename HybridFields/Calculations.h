@@ -27,6 +27,8 @@ void updateLocation(particle *Particle, Grid *Grid, double dt, int currentPartic
 
 int BoxIsInNearFieldOfParticle(Grid *g, const int boxIndex, const int particleIndex);
 
+void calcFieldsOnGridWithoutNearField(particle *particles, Grid *Grid, Fields *Fields, int numberOfParticles, double t);
+
 double E_x(const double x[4]);
 
 double E_y(const double x[4]);

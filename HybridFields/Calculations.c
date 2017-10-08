@@ -494,9 +494,9 @@ void crossProduct(double a[3], double b[3], double result[3]){
 void precalculateFieldsForGivenPrecalculationTime(particle *particles, Grid *Grid, Fields *Fields, int numberOfParticles, int numberOfPrecalculationSteps, FILE *rect, double dt, double tN, double precalculationTime, double Bext[3], double Eext[3]) {
     
     // predefine stuff
-    int numberOfBoxesInX = Grid->numberOfBoxesInX;
-    int numberOfBoxesInY = Grid->numberOfBoxesInY;
-    int numberOfBoxesInZ = Grid->numberOfBoxesInZ;
+//    int numberOfBoxesInX = Grid->numberOfBoxesInX;
+//    int numberOfBoxesInY = Grid->numberOfBoxesInY;
+//    int numberOfBoxesInZ = Grid->numberOfBoxesInZ;
 
     for(int step = 0; step < numberOfPrecalculationSteps; step++) {
         //*timeIterationStep += 1;
@@ -518,18 +518,37 @@ void precalculateFieldsForGivenPrecalculationTime(particle *particles, Grid *Gri
             Nystrom(particles, Fields, Grid, step, tau, numberOfParticles, h, dt, tN, Bext, Eext, true);
             
             // just at the very last time step, calculate fields for whole particle trajectory
-            if(double_equals(step * dt, (precalculationTime - dt))) {
-                // code
-                for(int boxIndex = 0; boxIndex < numberOfBoxesInX * numberOfBoxesInY * numberOfBoxesInZ; boxIndex++) {
-                    if(!boxIsInNearFieldOfParticle(Grid, &particles[h], boxIndex)) {
-                        double evaluationTime = step * dt;
-                        addLWFieldsInBoxforTest(Grid, Fields, &particles[h], boxIndex, evaluationTime);
-                        writeElectricFieldToFile(Grid, &particles[0], Fields, step);
-                    }
-                }
-            }
+//            if(double_equals(step * dt, (precalculationTime - dt))) {
+//                // code
+//                for(int boxIndex = 0; boxIndex < numberOfBoxesInX * numberOfBoxesInY * numberOfBoxesInZ; boxIndex++) {
+//                    if(!boxIsInNearFieldOfParticle(Grid, &particles[h], boxIndex)) {
+//                        double evaluationTime = step * dt;
+//                        addLWFieldsInBoxforTest(Grid, Fields, &particles[h], boxIndex, evaluationTime);
+//                        writeElectricFieldToFile(Grid, &particles[0], Fields, step);
+//                    }
+//                }
+//            }
         }
        // *time += dt;
+    }
+}
+
+
+void calcFieldsOnGridWithoutNearField(particle *particles, Grid *Grid, Fields *Fields, int numberOfParticles, double t) {
+    
+//    printf("time at which fields are calculated = %f\n", t);
+    
+    int numberOfBoxesInX = Grid->numberOfBoxesInX;
+    int numberOfBoxesInY = Grid->numberOfBoxesInY;
+    int numberOfBoxesInZ = Grid->numberOfBoxesInZ;
+    
+    for (int p = 0; p < numberOfParticles; p++){
+        for (int boxIndex = 0; boxIndex < numberOfBoxesInX * numberOfBoxesInY * numberOfBoxesInZ; boxIndex++){
+            if(!boxIsInNearFieldOfParticle(Grid, &particles[p], boxIndex)){
+//                addLWFieldsInBox(Grid, &particles[p], boxIndex, t);
+                addLWFieldsInBoxforTest(Grid, Fields, &particles[p], boxIndex, t);
+            }
+        }
     }
 }
 
@@ -1008,7 +1027,7 @@ void nystromBackwards(particle *particles, Grid *Grid, Fields *Fields, int numbe
     for(int preStep = 0; preStep < (precalculationTime / dt); preStep++) {
         for(int p = 0; p < numberOfParticles; p++) {
             double tau = dt / particles[p].uRel[0];
-            Nystrom(particles, Fields, Grid, preStep, tau, numberOfParticles, p, dt, 20, externBField, externEField,false);
+            Nystrom(particles, Fields, Grid, preStep, tau, numberOfParticles, p, dt, 20, externBField, externEField, false);
         }
     }
 }
@@ -2129,6 +2148,13 @@ void addLWField(Grid *Grid, particle *particle, double *destination, double xObs
             calculateBetaDotforTest(particle->uRelHistory[index], particle->uRelHistory[index + 1], dt, betaDot);
             calcuateLienardWiechertFieldsforTest(gamma_sq, R_sq, R, n, beta, betaDot, 1, E, B);
             
+//            printf("E[0] = %f\n", E[0]);
+//            printf("E[1] = %f\n", E[1]);
+//            printf("E[2] = %f\n", E[2]);
+//            printf("Grid point x = %f\n", xObserver[1]);
+//            printf("Grid point y = %f\n", xObserver[2]);
+//            printf("Grid point z = %f\n", xObserver[2]);
+            
             break;
         }
     }
@@ -2699,7 +2725,6 @@ void addLWFieldsInBoxforTest(Grid *Grid, Fields *Fields, particle *Particle, int
                 addLWField(Grid, Particle, &Fields->electricField[gridIndexInBox], xObserver, 0);
                 addLWField(Grid, Particle, &Fields->electricField[gridIndexInBox + 1], xObserver, 1);
                 addLWField(Grid, Particle, &Fields->electricField[gridIndexInBox + 2], xObserver, 2);
-                
             }
         }
     }

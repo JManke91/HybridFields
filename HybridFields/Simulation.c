@@ -227,7 +227,7 @@ void hybridFieldsWithAnalyticPrecalculation() {
     //Simulation Time of actual simulation
     double tN = 15.0;
     // time of precalculation (if used)
-    double precalculationTime = 0.0; // precalc of 7 works pretty well for circcles (B_z = 1)
+    double precalculationTime = 7.0; // precalc of 7 works pretty well for circcles (B_z = 1)
     
     //number of particles for simulation
     int numberOfParticles = 1;
@@ -295,6 +295,11 @@ void hybridFieldsWithAnalyticPrecalculation() {
         nystromBackwards(particles, &Grid, &Fields, numberOfParticles, dt, precalculationTime, Bext, Eext);
         resetInitialConditions(particles, numberOfParticles, Bext);
         precalculateFieldsForGivenPrecalculationTime(particles, &Grid, &Fields, numberOfParticles, numberOfPrecalculationSteps, rect, dt, tN, precalculationTime, Bext, Eext);
+        
+        // save fields at "precalculation time" to file
+        calcFieldsOnGridWithoutNearField(particles, &Grid, &Fields, numberOfParticles, precalculationTime - dt);
+        writeElectricFieldToFile(&Grid, &particles[0], &Fields, numberOfPrecalculationSteps - 1);
+        printf("writing field %i to file", numberOfPrecalculationSteps - 1);
     }
     //==============================================================================================================
     // MAIN ROUTINE
