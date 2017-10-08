@@ -225,12 +225,12 @@ void hybridFieldsWithAnalyticPrecalculation() {
     // =======================================
     
     //Simulation Time of actual simulation
-    double tN = 8.0;
+    double tN = 25.0;
     // time of precalculation (if used)
-    double precalculationTime = 4.0; // precalc of 7 works pretty well for circcles (B_z = 1)
+    double precalculationTime = 7.0; // precalc of 7 works pretty well for circcles (B_z = 1)
     
     //number of particles for simulation
-    int numberOfParticles = 1;
+    int numberOfParticles = 2;
     
     char filename[32] = "";
     
@@ -239,7 +239,7 @@ void hybridFieldsWithAnalyticPrecalculation() {
     particle particles[numberOfParticles];
     
     // dx, numberOfBoxes, numberOfGridPointsPerBox
-    initGrid(&Grid, 0.2, 0.2, 0.2, 8, 8, 8, 16, 16, 16);
+    initGrid(&Grid, 0.1, 0.1, 0.1, 16, 16, 16, 16, 16, 16);
     initFields(&Fields,&Grid);
     
     double dt = 0.5 * Grid.dx;
@@ -259,10 +259,10 @@ void hybridFieldsWithAnalyticPrecalculation() {
     }
     
     // initial conditions for all particles
-    //initializeParticle(&particles[1], 0, 17.0, 12.0, 14.8, -0.458, 0, 0);
-    //initializeParticle(&particles[0], 0, 7.0, 11.0, 14.8, 0.458, 0, 0);
+    initializeParticle(&particles[1], 0, 14.0, 12.0, 14.8, -0.458, 0, 0);
+    initializeParticle(&particles[0], 0, 8.0, 11.0, 14.8, 0.458, 0, 0);
     // circle testing
-    initializeParticle(&particles[0], 0, 10.5, 15.8, 14.8, 1.3, 0, 0);
+    //initializeParticle(&particles[0], 0, 10.5, 15.8, 14.8, 0.7, 0, 0);
     //initializeParticle(&particles[0], 0, 11.8, 11.8, 14.8, 2.5, 0, 0);
     
     // Simulation info for python script
@@ -284,7 +284,7 @@ void hybridFieldsWithAnalyticPrecalculation() {
     double Bext[3] = {0};
     double Eext[3] = {0};
     
-    Bext[2] = 1;
+    Bext[2] = 0;
     
     // =======================================
     // ANALYTIC FIELD-PRECALCULATION
@@ -307,7 +307,7 @@ void hybridFieldsWithAnalyticPrecalculation() {
     for(int step = precalculationTime / dt; step < tN / dt; step++) {
         
         // ATTENTION: DELETE THIS AFTER TESTING
-        double tau = dt / particles[0].uRel[0];
+        //double tau = dt / particles[0].uRel[0];
         
         //printf("Calculation of time step %i of %i...\n", p-numberOfPrecalculationSteps, numberOfIterations);
         int numberOfSteps = tN / dt;
@@ -334,11 +334,11 @@ void hybridFieldsWithAnalyticPrecalculation() {
 //            printf("time index of particle %i = %f\n", h, particles[0].xRel[0]);
 //            printf("time index = %f\n", precalculationTime);
             
-            double tau = dt / particles[h].uRel[0];
-            Nystrom(particles, &Fields, &Grid, step, tau, numberOfParticles, h, dt, tN, Bext, Eext,true);
+            //double tau = dt / particles[h].uRel[0];
+            //Nystrom(particles, &Fields, &Grid, step, tau, numberOfParticles, h, dt, tN, Bext, Eext,true);
             
-            //updateVelocityWithBorisPusher(particles, &Grid, &Fields, numberOfParticles, h, Eext, Bext, dt, p);
-            //updateLocation(particles, &Grid, dt, h, p);
+            updateVelocityWithBorisPusher(particles, &Grid, &Fields, numberOfParticles, h, Eext, Bext, dt, step);
+            updateLocation(particles, &Grid, dt, h, step);
             
             particles[h].newBoxIndexAfterPush = calcCurrentBoxIndexOfParticle(&particles[h], &Grid);
             calcBoxIndizesOfNextNeighbourBoxes(&Grid, &particles[h], particles[h].boxIndicesOfNearFieldBoxesAfterPush);

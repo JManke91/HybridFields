@@ -516,8 +516,12 @@ void precalculateFieldsForGivenPrecalculationTime(particle *particles, Grid *Gri
             // =================================================================
             addCurrentStateToParticleHistory(&particles[h], step);
             
-            double tau = dt/particles[h].uRel[0];
-            Nystrom(particles, Fields, Grid, step, tau, numberOfParticles, h, dt, tN, Bext, Eext, true);
+            //double tau = dt/particles[h].uRel[0];
+            //Nystrom(particles, Fields, Grid, step, tau, numberOfParticles, h, dt, tN, Bext, Eext, true);
+            
+            updateVelocityWithBorisPusher(particles, Grid, Fields, numberOfParticles, h, Eext, Bext, dt, step);
+            updateLocation(particles, Grid, dt, h, step);
+            
             
             // just at the very last time step, calculate fields for whole particle trajectory
 //            if(double_equals(step * dt, (precalculationTime - dt))) {
@@ -908,8 +912,8 @@ void updateLocation(particle *particle, Grid *Grid, double dt, int currentPartic
     particle[currentParticle].xRelHistory[currentTimeStep+1][2] = particle[currentParticle].xRel[2];
     particle[currentParticle].xRelHistory[currentTimeStep+1][3] = particle[currentParticle].xRel[3];
     
-    particle[currentParticle].iterationCount += 1;
-    particle[currentParticle].historyLength += 1;
+//    particle[currentParticle].iterationCount += 1;
+//    particle[currentParticle].historyLength += 1;
 }
 
 
@@ -1041,8 +1045,11 @@ void nystromBackwards(particle *particles, Grid *Grid, Fields *Fields, int numbe
         for(int p = 0; p < numberOfParticles; p++) {
             addCurrentStateToParticleHistory(&particles[p], preStep);
             
-            double tau = dt / particles[p].uRel[0];
-            Nystrom(particles, Fields, Grid, preStep, tau, numberOfParticles, p, dt, 20, externBField, externEField, false);
+            updateVelocityWithBorisPusher(particles, Grid, Fields, numberOfParticles, p, externEField, externBField, dt, preStep);
+            updateLocation(particles, Grid, dt, p, preStep);
+            
+//            double tau = dt / particles[p].uRel[0];
+//            Nystrom(particles, Fields, Grid, preStep, tau, numberOfParticles, p, dt, 20, externBField, externEField, false);
         }
     }
 }
