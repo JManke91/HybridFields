@@ -225,12 +225,15 @@ void hybridFieldsWithAnalyticPrecalculation() {
     // =======================================
     
     //Simulation Time of actual simulation
-    double tN = 25.0;
+    double tN = 30.0;
     // time of precalculation (if used)
-    double precalculationTime = 7.0; // precalc of 7 works pretty well for circcles (B_z = 1)
+    double precalculationTime = 10.0; // precalc of 7 works pretty well for circcles (B_z = 1)
     
     //number of particles for simulation
     int numberOfParticles = 2;
+    
+    // cut of length for particle trajectory
+    int cutOffLengthTrajectory = 20;
     
     char filename[32] = "";
     
@@ -239,7 +242,7 @@ void hybridFieldsWithAnalyticPrecalculation() {
     particle particles[numberOfParticles];
     
     // dx, numberOfBoxes, numberOfGridPointsPerBox
-    initGrid(&Grid, 0.1, 0.1, 0.1, 16, 16, 16, 16, 16, 16);
+    initGrid(&Grid, 0.2, 0.2, 0.2, 8, 8, 8, 16, 16, 16);
     initFields(&Fields,&Grid);
     
     double dt = 0.5 * Grid.dx;
@@ -259,15 +262,15 @@ void hybridFieldsWithAnalyticPrecalculation() {
     }
     
     // initial conditions for all particles
-    initializeParticle(&particles[1], 0, 14.0, 12.0, 14.8, -0.458, 0, 0);
-    initializeParticle(&particles[0], 0, 8.0, 11.0, 14.8, 0.458, 0, 0);
+    initializeParticle(&particles[1], 0, 14.5, 11.0, 14.8, -0.458, 0, 0);
+    initializeParticle(&particles[0], 0, 8.0, 11.0, 14.8, 0.0, 0.0, 0.0); // suppsed to be static in simulation
     // circle testing
-    //initializeParticle(&particles[0], 0, 10.5, 15.8, 14.8, 0.7, 0, 0);
+//    initializeParticle(&particles[0], 0, 10.5, 15.8, 14.8, 0.7, 0, 0);
     //initializeParticle(&particles[0], 0, 11.8, 11.8, 14.8, 2.5, 0, 0);
     
     // Simulation info for python script
     FILE *info = fopen("simulationInfo.txt","w");
-    fprintf(info, "%f\n%f\n%f\n%i\n%i\n%i\n%i", tN, precalculationTime, Grid.dx, Grid.numberOfBoxesInX, Grid.numberOfGridPointsPerBoxInX, numberOfParticles, Grid.Nx);
+    fprintf(info, "%f\n%f\n%f\n%i\n%i\n%i\n%i\n%d", tN, precalculationTime, Grid.dx, Grid.numberOfBoxesInX, Grid.numberOfGridPointsPerBoxInX, numberOfParticles, Grid.Nx, cutOffLengthTrajectory);
     fclose(info);
     
     writeDetailedSimulationInfoToFile(particles, &Grid, numberOfParticles, precalculationTime, tN);
@@ -306,10 +309,6 @@ void hybridFieldsWithAnalyticPrecalculation() {
     //==============================================================================================================
     for(int step = precalculationTime / dt; step < tN / dt; step++) {
         
-        // ATTENTION: DELETE THIS AFTER TESTING
-        //double tau = dt / particles[0].uRel[0];
-        
-        //printf("Calculation of time step %i of %i...\n", p-numberOfPrecalculationSteps, numberOfIterations);
         int numberOfSteps = tN / dt;
         printf("calculating next time step %i of %i...\n", step, numberOfSteps);
         writeHistoryOfParticlesToFile(particles, filename, step, numberOfParticles);
@@ -329,10 +328,6 @@ void hybridFieldsWithAnalyticPrecalculation() {
             fprintf(rect, "%f %f\n", cornerX, cornerY);
             // =================================================================
             addCurrentStateToParticleHistory(&particles[h], step);
-            
-//            printf("History time index of particle %i = %f\n", h, particles[0].xRelHistory[step][0]);
-//            printf("time index of particle %i = %f\n", h, particles[0].xRel[0]);
-//            printf("time index = %f\n", precalculationTime);
             
             //double tau = dt / particles[h].uRel[0];
             //Nystrom(particles, &Fields, &Grid, step, tau, numberOfParticles, h, dt, tN, Bext, Eext,true);

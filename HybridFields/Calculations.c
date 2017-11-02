@@ -650,7 +650,7 @@ void Nystrom(particle *particle, Fields *Fields, Grid *Grid, int p, double dt, i
     for (int d = 0; d < numberOfParticles; d++) {
         if(d != actualParticle) {
             currentBoxIndexOfOtherParticle = calcCurrentBoxIndexOfParticle(&particle[d], Grid);
-            if(boxIsInNearFieldOfParticle(Grid, &particle[actualParticle], currentBoxIndexOfOtherParticle)){
+            if(boxIsInNearFieldOfParticle(Grid, &particle[actualParticle], currentBoxIndexOfOtherParticle)) {
                 
                 double beta[3] = {0};
                 double intersectionPoint[4] = {0};
@@ -666,7 +666,7 @@ void Nystrom(particle *particle, Fields *Fields, Grid *Grid, int p, double dt, i
 
                 int currentHistoryLength = particle[d].iterationCount;
 
-                for (int index = 0; index < currentHistoryLength - 1; index ++){
+                for (int index = 0; index < currentHistoryLength - 1; index ++) {
                     if(isInsideBackwardLightcone(particle[d].xRelHistory[index], particle[actualParticle].xRel) && !isInsideBackwardLightcone(particle[d].xRelHistory[index + 1], particle[actualParticle].xRel)) {
                         calculateIntersectionPointforTest(particle[d].xRelHistory[index], particle[d].xRelHistory[index + 1], particle[d].uRelHistory[index], particle[d].uRelHistory[index + 1], particle[actualParticle].xRel, intersectionPoint, velocityAtIntersectionPoint);
                         calculateBetaforTest(particle[d].xRelHistory[index], particle[d].xRelHistory[index + 1], beta);
@@ -767,27 +767,12 @@ void updateVelocityWithBorisPusher(particle *Particles, Grid *Grid, Fields * Fie
     double absoluteSquareValueOfT;
     double uModifiedForCrossProduct[3];
     double chargeOverMass = Particle->charge / Particle->mass;
-    
-//    if (particleIsInsideSimulationArea(Grid, Particle)){
-//        updateFieldsForParticlePush(Particle, Grid, Eextern, Bextern, E, B);
-//        calcInteractionWithOtherParticles(Particles, Grid, numberOfParticles, particleIndex, E, B);
-//
-//        //        for(int i = 0; i < 3; i++) {
-//        //            printf("B[%d] = %f\n", i, B[i]);
-//        //            printf("E[%d] = %f\n", i, E[i]);
-//        //        }
-//    }
-    
-
-    
+ 
     // fill E, B with external fields no matter what (even outside of simulation area)
     for(int i = 0; i < 3; i++) {
         E[i] = Eextern[i];
         B[i] = Bextern[i];
     }
-    
-//    double F[4][4] = {0};
-    
     
     // For all Far Fields: Access saved B- and E field at closest grid position (CGP) to particle and pass those Arrays E[3] and B[3] into force tensor together with near field interactions.
     int i = Particle->xRel[1] / (Grid->dx);
@@ -810,10 +795,10 @@ void updateVelocityWithBorisPusher(particle *Particles, Grid *Grid, Fields * Fie
     }
     
     int currentBoxIndexOfOtherParticle = -1;
-    for (int d = 0; d < numberOfParticles; d++) {
-        if(d != particleIndex) {
+    for (int d = 0; d < numberOfParticles; d++) { // ATTENTION: delete this after testing
+        if(d != particleIndex) { // && d != 0
             currentBoxIndexOfOtherParticle = calcCurrentBoxIndexOfParticle(&Particles[d], Grid);
-            if(boxIsInNearFieldOfParticle(Grid, &Particles[particleIndex], currentBoxIndexOfOtherParticle)){
+            if(boxIsInNearFieldOfParticle(Grid, &Particles[particleIndex], currentBoxIndexOfOtherParticle)) {
                 
                 double beta[3] = {0};
                 double intersectionPoint[4] = {0};
@@ -829,8 +814,13 @@ void updateVelocityWithBorisPusher(particle *Particles, Grid *Grid, Fields * Fie
                 
                 int currentHistoryLength = Particles[d].iterationCount;
                 
-                for (int index = 0; index < currentHistoryLength - 1; index ++){
+                for (int index = 0; index < currentHistoryLength - 1; index ++) {
                     if(isInsideBackwardLightcone(Particles[d].xRelHistory[index], Particles[particleIndex].xRel) && !isInsideBackwardLightcone(Particles[d].xRelHistory[index + 1], Particles[particleIndex].xRel)) {
+                        
+                        // get history index, at which fields were emitted (in contrast to actual simulation index)
+                        printf("actual time step = %d\n", actualTimeStep);
+                        printf("emitted index = %d\n", index);
+                        
                         calculateIntersectionPointforTest(Particles[d].xRelHistory[index], Particles[d].xRelHistory[index + 1], Particles[d].uRelHistory[index], Particles[d].uRelHistory[index + 1], Particles[particleIndex].xRel, intersectionPoint, velocityAtIntersectionPoint);
                         calculateBetaforTest(Particles[d].xRelHistory[index], Particles[d].xRelHistory[index + 1], beta);
                         calculateLienardWiechertParametersforTest(intersectionPoint, Particles[particleIndex].xRel, velocityAtIntersectionPoint, &gamma_sq, &R_sq, &R, n, beta);
@@ -848,8 +838,15 @@ void updateVelocityWithBorisPusher(particle *Particles, Grid *Grid, Fields * Fie
         }
     }
     
-    
-    
+    // ATTENTION: Delete after testing
+    if (particleIndex == 0) {
+        // delete all fields (external and interaction fields with other particles), because particle 0 is supposed to be static
+        for (int i = 0; i < 3; i++) {
+            E[i] = 0;
+            B[i] = 0;
+        }
+    }
+
     // assisting values
     for (int i = 0; i < dimension; i++){
         t[i] = chargeOverMass * B[i] * dt * 0.5;
