@@ -1,4 +1,4 @@
-# README #
+# README # ctr + shift + m for preview
 
 C-Application, currently running in XCode
 
@@ -9,7 +9,4 @@ C-Application, currently running in XCode
 
 ### How do I get set up? ###
 
-* Run "HybridFields.xcodeproj" and check system path in "system(...)" command
-* Configuration --> none
-* Dependencies --> none (yet)
-* Database configuration
+* In Simulation.c adjust directory path for "BashScript_MakeImagesAndMovie.sh" in "system(...)" command

@@ -262,6 +262,7 @@ void hybridFieldsWithAnalyticPrecalculation() {
     }
     
     // initial conditions for all particles
+    /// initial conditions for Memory Optimization
     initializeParticle(&particles[1], 0, 14.5, 11.0, 14.8, -0.458, 0, 0);
     initializeParticle(&particles[0], 0, 8.0, 11.0, 14.8, 0.0, 0.0, 0.0); // suppsed to be static in simulation
     // circle testing

@@ -818,6 +818,7 @@ void updateVelocityWithBorisPusher(particle *Particles, Grid *Grid, Fields * Fie
                     if(isInsideBackwardLightcone(Particles[d].xRelHistory[index], Particles[particleIndex].xRel) && !isInsideBackwardLightcone(Particles[d].xRelHistory[index + 1], Particles[particleIndex].xRel)) {
                         
                         // get history index, at which fields were emitted (in contrast to actual simulation index)
+                        printf("particle history of particle%d\n", d);
                         printf("actual time step = %d\n", actualTimeStep);
                         printf("emitted index = %d\n", index);
                         
