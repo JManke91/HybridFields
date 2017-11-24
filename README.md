@@ -7,7 +7,7 @@ C-Application, currently running in XCode
 * This is my master-thesis in computational physics at the chair of Prof. Hartmut Ruhl at LMU-Munich.
 * Version
 
-### How do I get set up? ###
+### Setup ###
 
 * Run "HybridFields.xcodeproj" and check system path in "system(...)" command
 * Configuration --> none
